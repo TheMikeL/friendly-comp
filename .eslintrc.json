@@ -18,7 +18,10 @@
   },
   "plugins": ["react", "@typescript-eslint"],
   "rules": {
-    "react/jsx-filename-extension": 0
+    "react/jsx-filename-extension": 0,
+    "no-underscore-dangle": 0,
+    "no-useless-catch": 0,
+    "no-use-before-define": 0
   },
   "settings": {
     "import/resolver": {

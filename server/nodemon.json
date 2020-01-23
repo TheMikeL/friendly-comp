@@ -1,0 +1,7 @@
+{
+  "env": {
+    "MONGO_USER": "obesefood",
+    "MONGO_PASS": "mqs2fiE1i8U8hrX5",
+    "MONGO_DB": "friendly-comp"
+  }
+}
