@@ -1,34 +1,34 @@
 const DataLoader = require('dataloader');
-const Event = require('../../models/event');
+const Entry = require('../../models/entry');
 const User = require('../../models/user');
 const { dateToString } = require('../../helpers/date');
 
-const eventLoader = new DataLoader((eventIds) => {
-  return getEvents(eventIds);
+const entryLoader = new DataLoader((entryIds) => {
+  return getEntries(entryIds);
 });
 
 const userLoader = new DataLoader((userIds) => {
   return User.find({_id: {$in: userIds}});
 })
 
-const getEvents = async (eventIds) => {
+const getEntries = async (entryIds) => {
   try {
-    const events = await Event.find({ _id: { $in: eventIds } });
-    // events.sort((a,b) => {
+    const entries = await Entry.find({ _id: { $in: entryIds } });
+    // entries.sort((a,b) => {
     //   return (
-    //     eventIds.indexOf(a._id.toString()) - eventIds.indexOf(b._id.toString())
+    //     entryIds.indexOf(a._id.toString()) - entryIds.indexOf(b._id.toString())
     //   );
     // });
-    return events.map((event) => transformEvent(event));
+    return entries.map((entry) => transformEntry(entry));
   } catch (err) {
     throw err;
   }
 };
 
-const singleEvent = async (eventId) => {
+const singleEntry = async (entryId) => {
   try {
-    const event = await eventLoader.load(eventId.toString());
-    return event;
+    const entry = await entryLoader.load(entryId.toString());
+    return entry;
   } catch (err) {
     throw err;
   }
@@ -39,31 +39,29 @@ const getUser = async (userId) => {
     const currentUser = await userLoader.load(userId.toString());
     return ({
       ...currentUser._doc,
-      createdEvents: () => eventLoader.loadMany(currentUser._doc.createdEvents),
+      createdEntries: () => entryLoader.loadMany(currentUser._doc.createdEntries),
     });
   } catch (err) {
     throw err;
   }
 };
 
-const transformEvent = (event) => ({
-  ...event._doc,
-  _id: event.id,
-  date: dateToString(event._doc.date),
-  creator: getUser(event.creator),
+const transformEntry = (entry) => ({
+  ...entry._doc,
+  _id: entry.id,
+  date: dateToString(entry._doc.date),
+  creator: getUser(entry.creator),
 });
 
-const transformBooking = (booking) => ({
-  ...booking._doc,
-  _id: booking.id,
-  user: getUser(booking._doc.user),
-  event: singleEvent(booking._doc.event),
-  createdAt: dateToString(booking._doc.createdAt),
-  updatedAt: dateToString(booking._doc.updatedAt),
+const transformCompetition = (competition) => ({
+  ...competition._doc,
+  _id: competition.id,
+  user: getUser(competition._doc.user),
+  entry: singleEntry(competition._doc.entry),
 });
 
 // exports.getUser = getUser;
-// exports.getEvents = getEvents;
-// exports.singleEvent = singleEvent;
-exports.transformEvent = transformEvent;
-exports.transformBooking = transformBooking;
+// exports.getentries = getentries;
+// exports.singleEntry = singleEntry;
+exports.transformEntry = transformEntry;
+exports.transformCompetition = transformCompetition;

@@ -1,0 +1,16 @@
+@import '../App.css';
+
+.auth-form{
+  width: 40rem;
+  max-width: 80%;
+  margin: 5rem auto;
+}
+
+.entries-control {
+  text-align: center;
+  border: 1px solid var(--secondary-color);
+  padding: 1rem;
+  margin: 2rem auto;
+  width: 30rem;
+  max-width: 80%;
+}

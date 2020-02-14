@@ -1,0 +1,33 @@
+@import '../../App.css';
+.entry-list-item {
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid var(--secondary-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.entry-list-item h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--secondary-color);
+}
+
+.entry-list-item h2 {
+  margin: 0;
+  font-size: 1rem;
+  color: grey;
+}
+
+.entry-list-item p {
+  margin: 0;
+}
+
+.entry-list {
+  width: 40rem;
+  max-width: 90%;
+  margin: 2rem auto;
+  list-style: none;
+  padding: 0;
+}

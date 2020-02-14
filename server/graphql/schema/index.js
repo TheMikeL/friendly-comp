@@ -1,20 +1,23 @@
 const { buildSchema } = require('graphql');
 
 module.exports = buildSchema(`
-  type Booking {
+  type Competition {
     _id: ID!
-    event: Event!
-    user: User!
-    createdAt: String!
-    updatedAt: String!
+    title: String!
+    password: String
+    entries: [Entry!]
+    users: [User!]
+    score: String
+    description: String
+    creator: User!
   }
-  type Event {
+  type Entry {
     _id: ID!
     title: String!
     description: String!
-    price: String!
     date: String!
     creator: User!
+    competition: Competition!
   }
   type User {
     _id: ID!
@@ -22,7 +25,7 @@ module.exports = buildSchema(`
     password: String
     firstName: String
     lastName: String
-    createdEvents: [Event!]
+    createdEntries: [Entry!]
   }
 
   type AuthData {
@@ -31,32 +34,39 @@ module.exports = buildSchema(`
     tokenExpiration: Int!
   }
 
-  input EventInput {
+  input EntryInput {
     title: String!
     description: String!
-    price: String!
     date: String!
   }
 
   input UserInput {
-    email: String!
-    password: String!
     firstName: String
     lastName: String
+    email: String!
+    password: String!
+  }
+  input CompetitionInput {
+    title: String!
+    password: String!
+    description: String
   }
   type RootQuery {
-    events: [Event!]!
-    bookings: [Booking!]!
+    entries: [Entry!]!
     login(email: String!, password: String!): AuthData!
+    joinCompetition(title: String!, password: String!): Competition!
   }
   type RootMutation {
-    createEvent(eventInput: EventInput): Event
+    createEntry(entryInput: EntryInput): Entry
+    removeEntry(entryId: ID!): Entry
+    editEntry(entryInput: EntryInput): Entry 
     createUser(userInput: UserInput): User
-    bookEvent(eventId: ID!): Booking!
-    cancelBooking(bookingId: ID!): Event!
+    createCompetition(competitionInput: CompetitionInput): Competition!
   }
   schema {
     query: RootQuery 
     mutation: RootMutation
   }
 `);
+
+//Editentry, createCompetition, joinCompetition

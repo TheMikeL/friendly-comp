@@ -13,14 +13,25 @@ const userSchema = new Schema({
   },
   firstName: {
     type: String,
+    required: true,
+    trim: true,
+    lowercase: true,
   },
   lastName: {
     type: String,
+    trim: true,
+    lowercase: true,
   },
-  createdEvents: [
+  createdEntries: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'Event',
+      ref: 'Entry',
+    },
+  ],
+  competitions: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Competition',
     },
   ],
 });

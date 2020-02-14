@@ -1,8 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-
-
 import './MainNavigation.css';
 import AuthContext from '../../context/auth-context';
 
@@ -15,18 +13,19 @@ const MainNavigation = () => (
         </div>
         <div className="main-navigation-items">
           <ul>
-            {!context.token && (
+            {/* {!context.auth.loggedIn && (
               <li>
                 <NavLink to="/auth">Authenticate</NavLink>
               </li>
-            )}
-            <li>
-              <NavLink to="/events">Events</NavLink>
-            </li>
-            {context.token && (
+            )} */}
+            
+            {context.auth.loggedIn && (
               <>
+                {/* <li>
+                  <NavLink to="/entries">Entries</NavLink>
+                </li> */}
                 <li>
-                  <NavLink to="/bookings">Bookings</NavLink>
+                  <NavLink to="/competitions">Competitions</NavLink>
                 </li>
                 <li>
                   <button onClick={context.logout}>Logout</button>

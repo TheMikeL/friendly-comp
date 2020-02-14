@@ -1,59 +1,65 @@
-import React, { Component } from 'react';
+import React, { useState, FC } from 'react';
 import {
   BrowserRouter, Route, Redirect, Switch,
 } from 'react-router-dom';
-
-// eslint-disable-next-line import/extensions
 import AuthPage from './pages/Auth';
-import BookingsPage from './pages/Bookings';
-import EventsPage from './pages/Events';
+import CompetitionsPage from './pages/Competitions';
+import EntriesPage from './pages/Entries';
 import MainNavigation from './components/Navigation/MainNavigation';
 
 import AuthContext from './context/auth-context';
 
-
 import './App.css';
+import SelectedCompetition from './components/Competition/SelectedCompetition';
 
+const App: FC = ({}) => {
+  const [auth, setAuth] = useState({
+    loggedIn: false,
+    userId: "",
+    token: "",
+  })
 
+  const { loggedIn } = auth;
 
-class App extends Component<any,any> {
-  state = {
-    token: null,
-    userId: null,
+  const login = (userId: string, token: string, tokenExpiration: string) =>{
+    setAuth({
+      loggedIn: true,
+      userId: userId,
+      token: token,
+    })
   }
-  login = (userId: any, token: any, tokenExpiration: any) =>{
-    this.setState({token: token, userId: userId});
+  const logout = () =>{
+    setAuth({
+      loggedIn: false,
+      userId: "",
+      token: "",
+    })
   }
-  logout = () =>{
-    this.setState({token: null, userId: null});
+
+  const defaultValues = {
+    auth: auth,
+    login: login,
+    logout: logout,
   }
-  
-  render(){
-    const defaultValues = {
-      token: this.state.token,
-      userId: this.state.userId,
-      login: this.login,
-      logout: this.logout,
-    }
-    return (<BrowserRouter>
-      <>
-        <AuthContext.Provider value = {defaultValues}>
-          <MainNavigation />
-          <main className="main-content">
-            <Switch>
-              {this.state.token && <Redirect from="/" to="/events" exact />}
-              {this.state.token && <Redirect from="/auth" to="/events" exact />}
-              {!this.state.token && <Route path="/auth" component={AuthPage} />}
-              <Route path="/events" component={EventsPage} />
-              {this.state.token && <Route path="/bookings" component={BookingsPage} />}
-              {!this.state.token && <Redirect to="/auth" exact />}
-            </Switch>
-          </main>
-        </AuthContext.Provider>
-      </>
-    </BrowserRouter>
-    );
-  };
+  return (<BrowserRouter>
+    <>
+      <AuthContext.Provider value={defaultValues}>
+        <MainNavigation />
+        <main className="main-content">
+          <Switch>
+            {loggedIn && <Redirect from="/" to="/entries" exact />}
+            {loggedIn && <Redirect from="/auth" to="/competitions" exact />}
+            {!loggedIn && <Route path="/auth" component={AuthPage} />}
+            {loggedIn && <Route path="/entries" component={EntriesPage} />}
+            {loggedIn && <Route path="/competitions" component={CompetitionsPage} exact/>}
+            {loggedIn && <Route path="/competitions/:title" component={SelectedCompetition} />}
+            {!loggedIn && <Redirect to="/auth" exact />}
+          </Switch>
+        </main>
+      </AuthContext.Provider>
+    </>
+  </BrowserRouter>
+  );
 };
 
 export default App;

@@ -1,0 +1,85 @@
+
+  // const deleteCompetitionHandler = (competitionId: any) => {
+  //   setIsLoading(true);
+  //   const requestBody = {
+  //     query: `
+  //       mutation CancelCompetition($id: ID!){
+  //         cancelCompetition(competitionId: $id){
+  //           _id
+  //           title
+  //         }
+  //       }
+  //     `,
+  //     variables: {
+  //       id: competitionId,
+  //     }
+  //   };
+  //   fetch("http://localhost:3001/graphql", {
+  //     method: "POST",
+  //     body: JSON.stringify(requestBody),
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       'Authorization': 'Bearer ' + authContext.auth.token,
+  //     }
+  //   })
+  //     .then(res => {
+  //       if (res.status !== 200 && res.status !== 201) {
+  //         throw new Error("Failed!");
+  //       }
+  //       return res.json();
+  //     })
+  //     .then(resData => {
+  //       const updatedCompetitions = competitions.filter((competition: any) => {
+  //         return competition._id !== competitionId;
+  //       })
+  //       setCompetitions(updatedCompetitions);
+  //       setIsLoading(false);
+  //       console.log(resData);
+  //     })
+  //     .catch(err => {
+  //       setIsLoading(false);
+  //       console.log(err);
+  //     });
+  // }
+
+  // const fetchCompetitions = () => {
+  //   setIsLoading(true);
+  //   const requestBody = {
+  //     query: `
+  //       query {
+  //         competitions{
+  //           _id
+  //           createdAt
+  //           entry{
+  //             _id
+  //             title
+  //             date
+  //           }
+  //         }
+  //       }
+  //     `
+  //   };
+  //   fetch("http://localhost:3001/graphql", {
+  //     method: "POST",
+  //     body: JSON.stringify(requestBody),
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       'Authorization': 'Bearer ' + authContext.auth.token,
+  //     }
+  //   })
+  //     .then(res => {
+  //       if (res.status !== 200 && res.status !== 201) {
+  //         throw new Error("Failed!");
+  //       }
+  //       return res.json();
+  //     })
+  //     .then(resData => {
+  //       const competitions = resData.data.competitions;
+  //       setCompetitions(competitions);
+  //       setIsLoading(false);
+  //     })
+  //     .catch(err => {
+  //       setIsLoading(false);
+  //       console.log(err);
+  //     });
+  // };

@@ -1,120 +1,117 @@
 /* eslint-disable react/prefer-stateless-function */
-import React, { Component, SyntheticEvent } from 'react';
+import React, { useState, useContext, SyntheticEvent, } from 'react';
+import {userAuthentication} from '../Net';
 
-import './Auth.css';
+import './Pages.css';
 import AuthContext from '../context/auth-context';
 
-class AuthPage extends Component<any, any> {
-  emailEl: React.RefObject<HTMLInputElement>;
-  passwordEl: React.RefObject<HTMLInputElement>;
+const AuthPage = ({},{}) => {
+  const authContext = useContext(AuthContext);
+  const [isLogin, setIsLogin] = useState(true);
 
-  state = {
-    isLogin: true,
+  const emailEl: React.RefObject<HTMLInputElement> = React.createRef<HTMLInputElement>();
+  const passwordEl: React.RefObject<HTMLInputElement> = React.createRef<HTMLInputElement>();
+  const firstNameEl: React.RefObject<HTMLInputElement> = React.createRef<HTMLInputElement>();
+  const lastNameEl: React.RefObject<HTMLInputElement> = React.createRef<HTMLInputElement>();
+
+  const switchModeHandler = () => {
+    setIsLogin(!isLogin);
   }
 
-  static contextType =  AuthContext;
-
-  constructor(props: any){
-    super(props);
-    this.emailEl = React.createRef<HTMLInputElement>();
-    this.passwordEl = React.createRef<HTMLInputElement>();
-  }
-
-  switchModeHandler = () => {
-    this.setState((prevState: any) => {
-      return {isLogin: !prevState.isLogin}
-    });
-  }
-  submitHandler = (event: SyntheticEvent) => {
-    event.preventDefault();
+  const submitHandler = async (entry: SyntheticEvent) => {
+    entry.preventDefault();
     let inputEmail = "";
     let inputPassword = "";
-    if (this.emailEl.current){
-      inputEmail = this.emailEl.current.value;
+    let inputFirstName = "";
+    let inputLastName = "";
+    if (firstNameEl.current){
+      inputFirstName = firstNameEl.current.value;
     }
-    if (this.passwordEl.current){
-      inputPassword = this.passwordEl.current.value;
+    if (lastNameEl.current){
+      inputLastName = lastNameEl.current.value;
+    }
+    if (emailEl.current){
+      inputEmail = emailEl.current.value;
+    }
+    if (passwordEl.current){
+      inputPassword = passwordEl.current.value;
     }
     if (inputEmail.trim().length === 0 || inputPassword.trim().length === 0){
       return;
     }
-    let requestBody = {
-      query: `
-        query Login($email: String!, $password: String!){
-          login(email: $email, password: $password){
-            userId
-            token
-            tokenExpiration
-          }
-        }
-      `,
-      variables: {
-        email: inputEmail,
-        password: inputPassword,
-      }
-    };
-
-    if(!this.state.isLogin){
+    let requestBody;
+    if (isLogin){
       requestBody = {
         query: `
-          mutation CreateUser($email: String!, $password: String!){
-            createUser(userInput: {email: $email, password: $password}){
+          query Login($email: String!, $password: String!){
+            login(email: $email, password: $password){
+              userId
+              token
+              tokenExpiration
+            }
+          }`,
+          variables: {
+            email: inputEmail,
+            password: inputPassword,
+          }
+      };
+    }
+
+    if(!isLogin){
+      requestBody = {
+        query: `
+          mutation CreateUser($firstName: String, $lastName: String, $email: String!, $password: String!){
+            createUser(userInput: {firstName: $firstName, lastName: $lastName, email: $email, password: $password}){
               _id
               email
             }
           }
         `,
         variables: {
+          firstName: inputFirstName,
+          lastName: inputLastName,
           email: inputEmail,
           password: inputPassword,
         }
       };
     }
-    
-    fetch('http://localhost:3001/graphql', {
-      method: 'POST',
-      body: JSON.stringify(requestBody),
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    }).then((res) => {
-      console.log(res);
-      if (res.status !== 200 && res.status !== 201){
-        throw new Error('Failed!');
-      }
-        return res.json();
-    }).then((resData) => {
-      if (resData.data.login.token){
-        this.context.login(
-          resData.data.login.userId,
-          resData.data.login.token,
-          resData.data.login.tokenExpiration);
-      }
-      console.log(resData);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+
+    const user: any = await userAuthentication(requestBody);
+    if (user && user.token){
+      authContext.login(user.userId, user.token, user.tokenExpiration);
+    }
   }
 
-  render() {
-    return (
-      <form className="auth-form" onSubmit={this.submitHandler}>
+  return (
+    <form className="auth-form" onSubmit={submitHandler}>
+      {!isLogin && <>
         <div className="form-control">
-          <label htmlFor="email">E-mail</label>
-          <input type="email" id="email" ref={ this.emailEl } />
+          <label htmlFor="firstName">First Name
+            <input type="text" id="firstName" ref={ firstNameEl } />
+          </label>
         </div>
         <div className="form-control">
-          <label htmlFor="password">Password</label>
-          <input type="password" id="password" ref={ this.passwordEl } />
+          <label htmlFor="lastName">Last Name
+            <input type="text" id="lastName" ref={ lastNameEl } />
+          </label>
         </div>
-        <div className="form-actions">
-          <button type="submit" >Submit</button>
-          <button type="button" onClick={this.switchModeHandler}>Switch to {this.state.isLogin ? 'Sign Up' : 'Login'}</button>
-        </div>
-      </form>
-    );
-  }
+      </> }
+      <div className="form-control">
+        <label htmlFor="email">E-mail
+          <input type="email" id="email" ref={ emailEl } />
+        </label>
+      </div>
+      <div className="form-control">
+        <label htmlFor="password">Password
+          <input type="password" id="password" ref={ passwordEl } />
+        </label>
+      </div>
+      <div className="form-actions">
+        <button type="submit" >Submit</button>
+        <button type="button" onClick={switchModeHandler}>Switch to {isLogin ? 'Sign Up' : 'Login'}</button>
+      </div>
+    </form>
+  );
 }
 
 export default AuthPage;

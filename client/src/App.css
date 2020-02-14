@@ -1,3 +1,8 @@
+:root {
+  --primary-color: rgb(0, 56, 119);
+  --secondary-color: #01a7a7;
+}
+
 .main-content {
   margin: 4rem 2.5rem;
 }
@@ -36,7 +41,7 @@
 .btn:hover,
 .btn:active,
 .btn:focus {
-  background: #01a7a7;
-  border-color: #01a7a7;
+  background: var(--secondary-color);
+  border-color: var(--secondary-color);
   outline: none;
 }
