@@ -1,13 +1,36 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { useState, useContext, SyntheticEvent, } from 'react';
-import {userAuthentication} from '../Net';
+import { useMutation, useLazyQuery } from '@apollo/react-hooks';
+import gql from 'graphql-tag';
 
 import './Pages.css';
 import AuthContext from '../context/auth-context';
 
-const AuthPage = ({},{}) => {
+const LOG_IN = gql `
+  query Login($email: String!, $password: String!){
+    login(email: $email, password: $password){
+      userId
+      token
+      tokenExpiration
+      name
+    }
+  }
+`;
+
+const SIGN_UP = gql`
+    mutation CreateUser($firstName: String, $lastName: String, $email: String!, $password: String!){
+      createUser(userInput: {firstName: $firstName, lastName: $lastName, email: $email, password: $password}){
+        _id
+        email
+      }
+    }
+`;
+
+const AuthPage = () => {
   const authContext = useContext(AuthContext);
   const [isLogin, setIsLogin] = useState(true);
+  const [signUp] = useMutation(SIGN_UP);
+  const [signIn, {loading, error, data}] = useLazyQuery(LOG_IN);
 
   const emailEl: React.RefObject<HTMLInputElement> = React.createRef<HTMLInputElement>();
   const passwordEl: React.RefObject<HTMLInputElement> = React.createRef<HTMLInputElement>();
@@ -16,6 +39,16 @@ const AuthPage = ({},{}) => {
 
   const switchModeHandler = () => {
     setIsLogin(!isLogin);
+  }
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
+  if (data && data.login.token){
+    authContext.login(
+      data.login.userId,
+      data.login.token,
+      data.login.tokenExpiration,
+      data.login.name);
+    localStorage.setItem('token', data.login.token);
   }
 
   const submitHandler = async (entry: SyntheticEvent) => {
@@ -39,51 +72,25 @@ const AuthPage = ({},{}) => {
     if (inputEmail.trim().length === 0 || inputPassword.trim().length === 0){
       return;
     }
-    let requestBody;
     if (isLogin){
-      requestBody = {
-        query: `
-          query Login($email: String!, $password: String!){
-            login(email: $email, password: $password){
-              userId
-              token
-              tokenExpiration
-            }
-          }`,
-          variables: {
-            email: inputEmail,
-            password: inputPassword,
-          }
-      };
-    }
-
-    if(!isLogin){
-      requestBody = {
-        query: `
-          mutation CreateUser($firstName: String, $lastName: String, $email: String!, $password: String!){
-            createUser(userInput: {firstName: $firstName, lastName: $lastName, email: $email, password: $password}){
-              _id
-              email
-            }
-          }
-        `,
+      signIn({variables: {
+        email: inputEmail,
+        password: inputPassword,
+      }});
+    }else {
+      signUp({
         variables: {
-          firstName: inputFirstName,
-          lastName: inputLastName,
-          email: inputEmail,
-          password: inputPassword,
-        }
-      };
-    }
-
-    const user: any = await userAuthentication(requestBody);
-    if (user && user.token){
-      authContext.login(user.userId, user.token, user.tokenExpiration);
+        firstName: inputFirstName,
+        lastName: inputLastName,
+        email: inputEmail,
+        password: inputPassword,
+      }});
+      console.log("User Created!");
     }
   }
 
   return (
-    <form className="auth-form" onSubmit={submitHandler}>
+    <form className="auth__form" onSubmit={submitHandler}>
       {!isLogin && <>
         <div className="form-control">
           <label htmlFor="firstName">First Name

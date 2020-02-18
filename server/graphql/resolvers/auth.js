@@ -1,6 +1,5 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
 const User = require('../../models/user');
 
 module.exports = {
@@ -37,6 +36,6 @@ module.exports = {
       'somesupersecretkey',
       { expiresIn: '12h' },
     );
-    return { userId: currentUser.id, token: jwtToken, tokenExpiration: 12 };
+    return { userId: currentUser.id, token: jwtToken, tokenExpiration: 12, name: currentUser.firstName + ' ' + currentUser.lastName };
   },
 };

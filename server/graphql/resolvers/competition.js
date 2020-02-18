@@ -6,17 +6,18 @@ const bcrypt = require('bcryptjs');
 const { transformCompetition, transformEvent } = require('./merge');
 
 module.exports = {
-  // competitions: async (args, req) => {
-  //   if (!req.isAuth) {
-  //     throw new Error('Unauthenticated');
-  //   }
-  //   try {
-  //     const competitions = await Competition.find({user: req.userId});
-  //     return competitions.map((competition) => transformCompetition(competition));
-  //   } catch (err) {
-  //     throw err;
-  //   }
-  // },
+  competitions: async (args, req) => {
+    if (!req.isAuth) {
+      throw new Error('Unauthenticated');
+    }
+    
+    try {
+      const competitions = await Competition.find({users: req.userId});
+      return competitions;
+    } catch (err) {
+      throw err;
+    }
+  },
   createCompetition: async (args, req) => {
     if (!req.isAuth) {
       throw new Error('Unauthenticated');
@@ -68,6 +69,8 @@ module.exports = {
         user.competitions.push(foundCompetition);
         await user.save();
       }
+      foundCompetition.users.push(user);
+      await foundCompetition.save();
       console.log(`${foundCompetition.title} competition joined by ${user.firstName}!`);
       console.log("JoinedUser",user);
       return foundCompetition;

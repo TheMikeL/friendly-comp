@@ -1,66 +1,49 @@
-import React, { useState, useEffect, useContext, SyntheticEvent } from 'react';
-import AuthContext from '../../context/auth-context';
-import { Route } from 'react-router-dom';
-import SelectedCompetition from './SelectedCompetition';
+import React, { SyntheticEvent } from 'react';
+import { useLazyQuery } from '@apollo/react-hooks';
+import gql from 'graphql-tag';
+
+const JOIN_COMPETITION = gql`
+  query JoinCompetition($title: String!, $password: String!){
+    joinCompetition(title: $title, password: $password){
+      _id
+      title
+      description
+    }
+  }
+`;
 
 const JoinCompetition = (props: any) => {
-  const authContext = useContext(AuthContext);
-  console.log(props);
+  let inputTitle = "";
+  let inputPassword = "";
+  const [joinCompetition, {loading, error, data}] = useLazyQuery(JOIN_COMPETITION); 
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
+  if (data && data.joinCompetition){
+    props.history.push({
+      pathname:`/competitions/${data.joinCompetition.title}`,
+      state: { detail: data.joinCompetition},
+    });
+  }
   const titleEl: React.RefObject<HTMLInputElement> = React.createRef<HTMLInputElement>();
   const passwordEl: React.RefObject<HTMLInputElement> = React.createRef<HTMLInputElement>();
-  const joinCompetition = async (competition: SyntheticEvent) => {
+  const findCompetition = async (competition: SyntheticEvent) => {
     competition.preventDefault();
-    let inputTitle = "";
-    let inputPassword = "";
+    
     if (titleEl.current){
       inputTitle = titleEl.current.value;
     }
     if (passwordEl.current){
       inputPassword = passwordEl.current.value;
     }
-    const requestBody = {
-      query: `
-        query JoinCompetition($title: String!, $password: String!){
-          joinCompetition(title: $title, password: $password){
-            _id
-            title
-            description
-          }
-        }
-      `,
-      variables: {
-        title: inputTitle,
-        password: inputPassword,
-      }
-    };
-    fetch("http://localhost:3001/graphql", {
-      method: "POST",
-      body: JSON.stringify(requestBody),
-      headers: {
-        "Content-Type": "application/json",
-        'Authorization': 'Bearer ' + authContext.auth.token,
-      }
-    })
-      .then(res => {
-        if (res.status !== 200 && res.status !== 201) {
-          throw new Error("Failed!");
-        }
-        return res.json();
-      })
-      .then(resData => {
-        console.log(resData);
-        props.history.push({
-          pathname:`/competitions/${resData.data.joinCompetition.title}`,
-          state: { detail: resData.data.joinCompetition},
-        });
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    joinCompetition({variables: {
+      title: inputTitle,
+      password: inputPassword,
+    }});
   };
   return (
     <>
-      <form className="auth-form" onSubmit={joinCompetition}>
+      <form className="auth__form" onSubmit={findCompetition}>
         <div className="form-control">
           <label htmlFor="title">Title
             <input type="text" id="title" ref={ titleEl } />

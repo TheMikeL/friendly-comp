@@ -32,6 +32,7 @@ module.exports = buildSchema(`
     userId: ID!
     token: String!
     tokenExpiration: Int!
+    name: String!
   }
 
   input EntryInput {
@@ -54,6 +55,7 @@ module.exports = buildSchema(`
   type RootQuery {
     entries: [Entry!]!
     login(email: String!, password: String!): AuthData!
+    competitions: [Competition!]!
     joinCompetition(title: String!, password: String!): Competition!
   }
   type RootMutation {

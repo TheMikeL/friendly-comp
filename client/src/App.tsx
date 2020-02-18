@@ -12,20 +12,24 @@ import AuthContext from './context/auth-context';
 import './App.css';
 import SelectedCompetition from './components/Competition/SelectedCompetition';
 
-const App: FC = ({}) => {
+const App: FC = () => {
   const [auth, setAuth] = useState({
     loggedIn: false,
     userId: "",
     token: "",
+    tokenExpiration: 0,
+    name: "",
   })
 
   const { loggedIn } = auth;
 
-  const login = (userId: string, token: string, tokenExpiration: string) =>{
+  const login = (userId: string, token: string, tokenExpiration: number, name: string) =>{
     setAuth({
       loggedIn: true,
       userId: userId,
       token: token,
+      tokenExpiration: tokenExpiration,
+      name: name,
     })
   }
   const logout = () =>{
@@ -33,6 +37,8 @@ const App: FC = ({}) => {
       loggedIn: false,
       userId: "",
       token: "",
+      tokenExpiration: 0,
+      name: "",
     })
   }
 

@@ -13,7 +13,8 @@ const MainNavigation = () => (
         </div>
         <div className="main-navigation-items">
           <ul>
-            {/* {!context.auth.loggedIn && (
+            {/* FOR LATER USE
+            {!context.auth.loggedIn && (
               <li>
                 <NavLink to="/auth">Authenticate</NavLink>
               </li>
@@ -21,9 +22,6 @@ const MainNavigation = () => (
             
             {context.auth.loggedIn && (
               <>
-                {/* <li>
-                  <NavLink to="/entries">Entries</NavLink>
-                </li> */}
                 <li>
                   <NavLink to="/competitions">Competitions</NavLink>
                 </li>
