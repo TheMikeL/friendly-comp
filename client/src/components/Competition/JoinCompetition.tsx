@@ -1,6 +1,10 @@
 import React, { SyntheticEvent } from 'react';
 import { useLazyQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
+
+interface IRouterProps extends RouteComponentProps<any> {
+}
 
 const JOIN_COMPETITION = gql`
   query JoinCompetition($title: String!, $password: String!){
@@ -12,7 +16,7 @@ const JOIN_COMPETITION = gql`
   }
 `;
 
-const JoinCompetition = (props: any) => {
+const JoinCompetition:React.FC<IRouterProps> = ({history}) => {
   let inputTitle = "";
   let inputPassword = "";
   const [joinCompetition, {loading, error, data}] = useLazyQuery(JOIN_COMPETITION); 
@@ -20,7 +24,7 @@ const JoinCompetition = (props: any) => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
   if (data && data.joinCompetition){
-    props.history.push({
+    history.push({
       pathname:`/competitions/${data.joinCompetition.title}`,
       state: { detail: data.joinCompetition},
     });
@@ -63,4 +67,4 @@ const JoinCompetition = (props: any) => {
   )
 }
 
-export default JoinCompetition;
+export default withRouter(JoinCompetition);

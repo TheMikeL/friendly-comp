@@ -1,13 +1,6 @@
 import React, { SyntheticEvent } from 'react';
 import { useMutation } from '@apollo/react-hooks';
-
 import gql from 'graphql-tag';
-
-
-interface State {
-  isLoading: boolean,
-  competitions?: [],
-}
 
 const CREATE_COMPETITION = gql `
   mutation CreateCompetition($title: String!, $password: String!, $description: String){
@@ -19,7 +12,7 @@ const CREATE_COMPETITION = gql `
   }
 `;
 
-const CreateCompetition = (props: any, state: State) => {
+const CreateCompetition:React.FC = () => {
   const [createCompetition] = useMutation(CREATE_COMPETITION);
 
   const titleEl: React.RefObject<HTMLInputElement> = React.createRef<HTMLInputElement>();
@@ -28,9 +21,9 @@ const CreateCompetition = (props: any, state: State) => {
   
   const createCompetitionHandler = async (competition: SyntheticEvent) => {
     competition.preventDefault();
-    let inputTitle = "";
-    let inputPassword = "";
-    let inputDescription = "";
+    let inputTitle: string = "";
+    let inputPassword: string = "";
+    let inputDescription: string = "";
     if (titleEl.current){
       inputTitle = titleEl.current.value;
     }
@@ -71,4 +64,4 @@ const CreateCompetition = (props: any, state: State) => {
   )
 }
 
-export default CreateCompetition
+export default CreateCompetition;

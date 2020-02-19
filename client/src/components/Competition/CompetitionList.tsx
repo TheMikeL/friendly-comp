@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import './CompetitionList.css';
-import { useQuery } from '@apollo/react-hooks';
+import { useLazyQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 
 const GET_COMPETITIONS = gql`
@@ -13,18 +13,24 @@ const GET_COMPETITIONS = gql`
   }
 `;
 
-const CompetitionList = (props: any) => {
-  const { loading, error, data, refetch } = useQuery(GET_COMPETITIONS);
+interface ICompetition {
+  _id: string,
+  title: string,
+  description: string,
+}
+
+const CompetitionList:React.FC = () => {
+  const [getCompetitions,{ loading, error, data }] = useLazyQuery(GET_COMPETITIONS);
 
   useEffect(() => {
-    refetch();
-  }, []);
-  
+    getCompetitions();
+  }, [data]);
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
   return (
     <ul className="competitions-list">
-      {data.competitions.map((competition: any) => {
+      {data && data.competitions.map((competition: ICompetition) => {
         return (
         <li key={competition._id} className="competitions-item">
           <div className="competitions-item-data">

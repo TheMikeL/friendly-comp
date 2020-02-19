@@ -1,4 +1,4 @@
-import React, { useState, FC } from 'react';
+import React, { useState } from 'react';
 import {
   BrowserRouter, Route, Redirect, Switch,
 } from 'react-router-dom';
@@ -12,14 +12,21 @@ import AuthContext from './context/auth-context';
 import './App.css';
 import SelectedCompetition from './components/Competition/SelectedCompetition';
 
-const App: FC = () => {
-  const [auth, setAuth] = useState({
+interface IUserAuth {
+    loggedIn: boolean,
+    userId: string,
+    token: string,
+    tokenExpiration: number,
+    name: string,
+}
+const App: React.FC = () => {
+  const [auth, setAuth] = useState<IUserAuth>({
     loggedIn: false,
     userId: "",
     token: "",
     tokenExpiration: 0,
     name: "",
-  })
+  });
 
   const { loggedIn } = auth;
 

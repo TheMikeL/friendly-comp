@@ -8,11 +8,11 @@ import CompetitionList from '../components/Competition/CompetitionList';
 import AuthContext from '../context/auth-context';
 
 
-const CompetitionsPage = (props: any) => {
+const CompetitionsPage: React.FC = () => {
   const authContext = useContext(AuthContext);
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState<number>(0);
 
-  const handleChange = (event: any, newValue: number) => {
+  const handleChange = (_event:any, newValue: number) => {
     setValue(newValue);
   };
 
@@ -32,7 +32,7 @@ const CompetitionsPage = (props: any) => {
         <Tab label="Join" />
       </Tabs>
       {value 
-        ? <JoinCompetition history={props.history}/>
+        ? <JoinCompetition />
         : <CreateCompetition />
       }
     </>

@@ -1,8 +1,6 @@
 const Competition = require('../../models/competition');
 const User = require('../../models/user');
 const bcrypt = require('bcryptjs');
-
-
 const { transformCompetition, transformEvent } = require('./merge');
 
 module.exports = {

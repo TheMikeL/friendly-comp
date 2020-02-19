@@ -26,9 +26,9 @@ const SIGN_UP = gql`
     }
 `;
 
-const AuthPage = () => {
+const AuthPage: React.FC = () => {
   const authContext = useContext(AuthContext);
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState<boolean>(true);
   const [signUp] = useMutation(SIGN_UP);
   const [signIn, {loading, error, data}] = useLazyQuery(LOG_IN);
 
@@ -53,10 +53,10 @@ const AuthPage = () => {
 
   const submitHandler = async (entry: SyntheticEvent) => {
     entry.preventDefault();
-    let inputEmail = "";
-    let inputPassword = "";
-    let inputFirstName = "";
-    let inputLastName = "";
+    let inputEmail:string = "";
+    let inputPassword:string = "";
+    let inputFirstName:string = "";
+    let inputLastName:string = "";
     if (firstNameEl.current){
       inputFirstName = firstNameEl.current.value;
     }

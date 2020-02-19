@@ -1,6 +1,5 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-
 import './MainNavigation.css';
 import AuthContext from '../../context/auth-context';
 
@@ -13,13 +12,6 @@ const MainNavigation = () => (
         </div>
         <div className="main-navigation-items">
           <ul>
-            {/* FOR LATER USE
-            {!context.auth.loggedIn && (
-              <li>
-                <NavLink to="/auth">Authenticate</NavLink>
-              </li>
-            )} */}
-            
             {context.auth.loggedIn && (
               <>
                 <li>
