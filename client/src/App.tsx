@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import {
   BrowserRouter, Route, Redirect, Switch,
 } from 'react-router-dom';
-import AuthPage from './pages/Auth';
-import CompetitionsPage from './pages/Competitions';
-import EntriesPage from './pages/Entries';
+import AuthPage from './pages/Authentication/Auth';
+import CompetitionsPage from './pages/Competition/Competition';
+import HomePage from './pages/Home/Home';
 import MainNavigation from './components/Navigation/MainNavigation';
 
 import AuthContext from './context/auth-context';
@@ -60,10 +60,9 @@ const App: React.FC = () => {
         <MainNavigation />
         <main className="main-content">
           <Switch>
-            {loggedIn && <Redirect from="/" to="/entries" exact />}
+            {!loggedIn && <Route path="/" component={HomePage} exact />}
             {loggedIn && <Redirect from="/auth" to="/competitions" exact />}
             {!loggedIn && <Route path="/auth" component={AuthPage} />}
-            {loggedIn && <Route path="/entries" component={EntriesPage} />}
             {loggedIn && <Route path="/competitions" component={CompetitionsPage} exact/>}
             {loggedIn && <Route path="/competitions/:title" component={SelectedCompetition} />}
             {!loggedIn && <Redirect to="/auth" exact />}

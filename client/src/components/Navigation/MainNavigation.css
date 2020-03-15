@@ -1,5 +1,14 @@
 @import '../../App.css';
 
+a,
+a:hover,
+a:active,
+a:focus{
+  text-decoration: none;
+  color: white;
+  outline: none;
+} 
+
 .main-navigation {
   position: fixed;
   left: 0;
@@ -13,19 +22,19 @@
   align-items: center;
 }
 
-.main-navigation-logo {
+.main-navigation__logo {
   margin: 0;
   font-size: 1rem;
   width: 40%;
 }
 
-.main-navigation-items { 
+.main-navigation__items { 
   margin-left: 1.5rem;
   width: 60%;
   padding-right: 5rem;
 }
 
-.main-navigation-items ul {
+.main-navigation__items ul {
   display: flex;
   list-style: none;
   padding: 0;
@@ -34,13 +43,13 @@
   align-items: center;
 }
 
-.main-navigation-items li {
+.main-navigation__items li {
   margin: 0 1rem;
   width: 100%;
 }
 
-.main-navigation-items a,
-.main-navigation-items button {
+.main-navigation__items a,
+.main-navigation__items button {
   text-decoration: none;
   color: rgb(182, 182, 182);
   padding: 6px 8px;
@@ -51,11 +60,11 @@
   font: inherit;
 }
 
-.main-navigation-items a:hover,
-.main-navigation-items a:active,
-.main-navigation-items a.active,
-.main-navigation-items button:hover,
-.main-navigation-items button:active {
+.main-navigation__items a:hover,
+.main-navigation__items a:active,
+.main-navigation__items a.active,
+.main-navigation__items button:hover,
+.main-navigation__items button:active {
   color: var(--primary-color);
   background-color: white;
   outline: none;
